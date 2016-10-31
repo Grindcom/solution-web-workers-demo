@@ -41,8 +41,11 @@
     toggleButtonsAbledness();
 
     // Hint! This is where you should post messages to the web worker and
-    // receive messages from the web worker.
 
+    // receive messages from the web worker.
+    // If the browser supports the Worker API
+
+//
     length = imageData.data.length / 4;
     for (i = j = 0, ref = length; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
       r = imageData.data[i * 4 + 0];
@@ -79,3 +82,16 @@
     revertImage();
   };
 })();
+var first = '#number1';
+var second = document.querySelector('#number2');
+console.log("Pre-worker");
+if(window.Worker){
+  // Set up a worker relationship with worker.js
+  var myWorker = new Worker("scripts/worker.js");
+  myWorker.postMessage([first]);
+  console.log("Sent message to worker");
+
+  myWorker.onmessage = function(e){
+    console.log("From Worker: " + e.data);
+  };
+}
