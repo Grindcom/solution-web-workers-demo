@@ -10,7 +10,7 @@
         //  Set up a worker relationship with worker.js
         //
         var imageWorker = new Worker('scripts/worker.js');
-        console.log("Made imageWorker.");
+        //console.log("Made imageWorker.");
         //
         function handleImage(e) {
                 var reader = new FileReader();
@@ -43,7 +43,7 @@
         function manipulateImage(type) {
                 var a, b, g, i, imageData, j, length, pixel, r, ref;
                 imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                console.log("imageData: " + imageData.data);
+                //console.log("Type: " + type);
                 toggleButtonsAbledness();
 
                 // Hint! This is where you should post messages to the web worker and
@@ -52,19 +52,20 @@
                 // If the browser supports the Worker
                 //
                 // Send message to Worker API
-                myWorker.postMessage({
+                imageWorker.postMessage({
                         'imageData': imageData,
                         'type': type
                 });
-                console.log("Sent message to worker");
+                // //console.log("Sent message to worker");
                 //
                 // Receive message from worker
-                myWorker.onmessage = function(e) {
-                        console.log("From Worker: " + e.data);
+                imageWorker.onmessage = function(e) {
+                        // //console.log("From Worker: " + e.data);
+                        toggleButtonsAbledness();
                         image = e.data;
                         if(image){
-                                toggleButtonsAbledness();
-                                return ctx.putImageData(imageData, 0, 0);
+                                // //console.log("Got image; length: " + image.data.length);
+                                return ctx.putImageData(e.data, 0, 0);
                         }
                         console.log("No image returned.");
                 }
@@ -85,18 +86,23 @@
         }
 
         document.querySelector('#invert').onclick = function() {
+                // //console.log("Call invert.");
                 manipulateImage("invert");
         };
         document.querySelector('#chroma').onclick = function() {
+                ////console.log("Call choma.");
                 manipulateImage("chroma");
         };
         document.querySelector('#greyscale').onclick = function() {
+                //console.log("Call greyscale");
                 manipulateImage("greyscale");
         };
         document.querySelector('#vibrant').onclick = function() {
+                //console.log("Call vibrant");
                 manipulateImage("vibrant");
         };
         document.querySelector('#revert').onclick = function() {
+                //console.log("call revert");
                 revertImage();
         };
 })();
