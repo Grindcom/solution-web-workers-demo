@@ -1,9 +1,10 @@
 importScripts('imageManips.js');
 
 this.onmessage = function(e) {
-  // var imageData = e.data.imageData;
+  var imageData = e.data.imageData;
   var type = e.data.type;
   try {
+    console.log("Message in worker.js: " + e);
     length = imageData.data.length / 4;
     for (i = j = 0, ref = length; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
       r = imageData.data[i * 4 + 0];
@@ -17,7 +18,7 @@ this.onmessage = function(e) {
       imageData.data[i * 4 + 3] = pixel[3];
     }
     postMessage(imageData);
-} catch (ex) {
+  } catch (ex) {
     console.log("exception: " + ex);
     function ManipulationException(message) {
       this.name = "ManipulationException";
